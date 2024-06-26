@@ -34,3 +34,26 @@ button:active {
   background-color: #efaa4a;
   color: white;
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  grid-auto-rows: minmax(100px, auto);
+}
+
+.card {
+  text-align: center;
+  box-shadow: 5px 5px 5px darkgoldenrod;
+  border-radius: 10px;
+  border: 1px solid darkgoldenrod;
+  padding-bottom: 20px;
+}
+
+.card__image {
+  width: 100%;
+}
+
+.card__image img {
+  width: 100%;
+}
