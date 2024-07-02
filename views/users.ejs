@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./includes/head.ejs') %>
+<body>
+  <a href="/">Add another User</a>
+  <% if (users.length) { %>
+    <ul>
+      <% for (let user of users) { %>
+        <li><%= user.userName %></li>
+      <% } %>
+    </ul>
+  <% } else { %>
+    <p>User List is empty</p>
+  <% } %>
+</body>
+</html>
