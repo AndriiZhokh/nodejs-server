@@ -1,0 +1,19 @@
+extends ../layouts/main-layout.pug
+
+block styles
+	link(rel="stylesheet", href="/css/form.css")
+
+block content
+	main
+		h1 Admin Products Page
+		if prods.length > 0
+			ul
+				each product in prods
+					li
+						span #{product.title}
+						a(href="/admin/edit-product") Edit
+
+						form(action="/admin/delete-product", method="POST")
+							button.btn(type="submit") Delete
+		else
+			p No Products

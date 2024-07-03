@@ -1,7 +1,8 @@
-extends layouts/main-layout.pug
+extends ../layouts/main-layout.pug
 
 block styles
 	link(rel="stylesheet", href="/css/product.css")
+	link(rel="stylesheet", href="/css/form.css")
 
 block content
 	main
@@ -12,11 +13,12 @@ block content
 						header.card__header
 							h1.product__title #{product.title}
 						.card__image
-							img(src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1417900846i/29579.jpg", alt="A Book")
+							img(src=product.imageUrl, alt=product.title)
 						.card__content
-							h2.product__price $19.99
-							p.product__description A very interesting book
+							h2.product__price $#{product.price}
+							p.product__description #{product.description}
 						.card__actions
-							button.btn Add to Cart
+							form(action="/add-to-cart", method="POST")
+								button.btn(type="submit") Add to Cart
 		else
 			h1 No Products
