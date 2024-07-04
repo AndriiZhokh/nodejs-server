@@ -1,8 +1,9 @@
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  grid-auto-rows: minmax(100px, auto);
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 40rem;
+  gap: 1.5rem;
+  grid-auto-columns: auto;
 }
 
 .card {
@@ -13,10 +14,21 @@
   padding-bottom: 20px;
 }
 
-.card__image {
-  width: 100%;
+.card__image img {
+  height: 250px;
 }
 
-.card__image img {
-  width: 100%;
+.product__description {
+  padding: 0 16px;
+  height: 168px;
+  display: -webkit-box;
+  -webkit-line-clamp: 9;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card__actions {
+  display: flex;
+  justify-content: center;
 }

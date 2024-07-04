@@ -40,6 +40,7 @@ module.exports = class Product {
 
 	async save() {
 		try {
+			this.id = Date.now();
 			const products = await getProductsFromFile();
 			products.push(this);
 

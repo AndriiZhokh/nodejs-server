@@ -9,6 +9,11 @@ exports.getProducts = async (req, res, next) => {
   res.render('shop/product-list', { prods: products, pageTitle: 'All Products', path: '/products' });
 };
 
+exports.getProduct = (req, res, next) => {
+  const productId = req.params.productId;
+  res.render('shop/product-detail', { productId, pageTitle: 'Product Details' });
+};
+
 exports.getCart = (req, res, next) => {
   res.render('shop/cart', { pageTitle: 'Cart', path: '/cart' });
 };
