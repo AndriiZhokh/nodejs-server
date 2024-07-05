@@ -1,0 +1,16 @@
+.product-details__container {
+  margin: 0 auto;
+  width: 50%;
+}
+
+.product-details__content {
+  display: flex;
+}
+
+.product-details__image-container {
+  margin-right: 2rem;
+}
+
+.product-details__description-container {
+  width: 400px;
+}

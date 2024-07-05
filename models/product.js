@@ -58,4 +58,14 @@ module.exports = class Product {
 			return [];
 		}
 	}
+
+	static async findById(id) {
+		try {
+			const products = await getProductsFromFile();
+
+			return products.find((p) => p.id === id);
+		} catch(error) {
+			console.log(error);
+		}
+	}
 };
