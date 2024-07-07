@@ -2,33 +2,9 @@ const fs = require('fs');
 const path = require('path');
 
 const rootDir = require('../util/path');
+const { getFromFile, saveToFile } = require('../util/file-helpers.js');
 
 const filePath = path.join(rootDir, 'data', 'products.json');
-
-function getProductsFromFile() {
-	return new Promise((resolve, rejects) => {
-		fs.readFile(filePath, (error, fileContent) => {
-			if (error) {
-				resolve([]);
-			} else {
-				const products = JSON.parse(fileContent);
-				resolve(products ? products : []);
-			}
-		});
-	});
-}
-
-function saveProductsToFile(products) {
-	return new Promise((resolve, rejects) => {
-		fs.writeFile(filePath, JSON.stringify(products), (error) => {
-			if (error) {
-				rejects(error);
-			} else {
-				resolve();
-			}
-		});
-	});
-}
 
 module.exports = class Product {
 	constructor(title, imageUrl, description, price) {
@@ -41,10 +17,15 @@ module.exports = class Product {
 	async save() {
 		try {
 			this.id = Date.now();
-			const products = await getProductsFromFile();
-			products.push(this);
+			let products = await getFromFile(filePath);
 
-			await saveProductsToFile(products);
+			if (products) {
+				products.push(this);
+			} else {
+				products = [this];
+			}
+
+			await saveToFile(filePath, products);
 
 		} catch(error) {
 			console.log(error);
@@ -53,7 +34,9 @@ module.exports = class Product {
 
 	static async fetchAll() {
 		try {
-			return await getProductsFromFile();
+			const products = await getFromFile(filePath);
+
+			return products ? products : [];
 		} catch(error) {
 			return [];
 		}
@@ -61,9 +44,9 @@ module.exports = class Product {
 
 	static async findById(id) {
 		try {
-			const products = await getProductsFromFile();
+			const products = await getFromFile(filePath);
 
-			return products.find((p) => p.id === id);
+			return products?.find((p) => Number(p.id) === Number(id));
 		} catch(error) {
 			console.log(error);
 		}
