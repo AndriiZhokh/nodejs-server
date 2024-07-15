@@ -6,7 +6,7 @@ const { getFromFile, saveToFile } = require('../util/file-helpers');
 const cartPath = path.join(
 	rootDir,
 	'data',
-	'cart.js',
+	'cart.json',
 );
 
 module.exports = class Cart {
@@ -34,6 +34,37 @@ module.exports = class Cart {
 			cart.totalPrice = Number(cart.totalPrice) + Number(productPrice);
 
 			await saveToFile(cartPath, cart);
+		} catch(error) {
+			console.log(error);
+		}
+	}
+
+	static async deleteProduct(id, price) {
+		try {
+			const cart = await getFromFile(cartPath)
+			const updatedCart = { ...cart };
+			const product = updatedCart.products.find((prod) => Number(prod.id) === Number(id));
+
+			if (!product) {
+				return;
+			}
+
+			const productQty = product.qty;
+
+			updatedCart.products = updatedCart.products.filter((prod) => Number(prod.id) !== Number(id));
+			updatedCart.totalPrice = Number(cart.totalPrice) - Number(price) * Number(productQty);
+
+			await saveToFile(cartPath, updatedCart)
+		} catch(error) {
+			console.log(error);
+		}
+	}
+
+	static async getCart() {
+		try {
+			const cartContent = await getFromFile(cartPath);
+
+			return cartContent;
 		} catch(error) {
 			console.log(error);
 		}
