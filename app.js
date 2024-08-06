@@ -12,8 +12,6 @@ const errorController = require('./controllers/error');
 const app = express();
 
 app.set('view engine', 'pug');
-// setting directory path that contain views
-// by default it is 'views' and this line could be skipped
 app.set('views', 'views');
 
 app.use(bodyParser.urlencoded({ extended: false }));

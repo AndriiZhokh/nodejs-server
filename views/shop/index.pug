@@ -1,5 +1,25 @@
 extends ../layouts/main-layout.pug
 
+block styles
+	link(rel="stylesheet", href="/css/product.css")
+	link(rel="stylesheet", href="/css/form.css")
+
 block content
 	main
 		h1 Main Shop Page
+		if prods.length > 0
+			.grid
+				each product in prods
+					article.card.product-item
+						header.card__header
+							h1.product__title #{product.title}
+						.card__image
+							img(src=product.imageUrl, alt=product.title)
+						.card__content
+							h2.product__price $#{product.price}
+							p.product__description #{product.description}
+						.card__actions
+							a.btn(href="/products/" + product.id) Details
+							include ../includes/add-to-cart.pug
+		else
+			h1 No Products
