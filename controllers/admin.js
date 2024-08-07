@@ -10,11 +10,15 @@ exports.postAddProduct = async (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
 
-  const product = new Product(null, title, imageUrl, description, price);
-
   try {
-    await product.save();
-    res.redirect('/');
+    await Product.create({
+      title,
+      price,
+      imageUrl,
+      description,
+    });
+
+    console.log('Product was created');
   } catch(error) {
     console.log(error);
   }
@@ -28,13 +32,18 @@ exports.getEditProduct = async (req, res, next) => {
   }
 
   const prodId = req.params.productId;
-  const product = await Product.findById(prodId);
 
-  if (!product) {
-    return res.redirect('/');
+  try {
+    const product = await Product.findByPk(prodId);
+
+    if (!product) {
+      return res.redirect('/');
+    }
+
+    res.render('admin/edit-product', { pageTitle: 'Edit Product', path: '/admin/edit-product', editing: editMode, product: product });
+  } catch(error) {
+    console.log(error);
   }
-
-  res.render('admin/edit-product', { pageTitle: 'Edit Product', path: '/admin/edit-product', editing: editMode, product: product });
 };
 
 exports.postEditProduct = async (req, res, next) => {
@@ -44,14 +53,24 @@ exports.postEditProduct = async (req, res, next) => {
   const updatedImageUrl = req.body.imageUrl;
   const updatedDescription = req.body.description;
 
-  const updatedProduct = new Product(prodId, updatedTitle, updatedImageUrl, updatedDescription, updatedPrice)
-  await updatedProduct.save()
+  try {
+    const product = await Product.findByPk(prodId);
+    product.title = updatedTitle;
+    product.price = updatedPrice;
+    product.imageUrl = updatedImageUrl;
+    product.description = updatedDescription;
 
-  res.redirect('/admin/products');
+    await product.save();
+    console.log('UPDATED PRODUCT');
+
+    res.redirect('/admin/products');
+  } catch(error) {
+    console.log(error);
+  }
 };
 
 exports.getAdminProducts = async (req, res, next) => {
-  const prods = await Product.fetchAll();
+  const prods = await Product.findAll();
   res.render('admin/products', { pageTitle: 'Admin Products', path: '/admin/products', prods });
 };
 
