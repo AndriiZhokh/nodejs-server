@@ -23,8 +23,13 @@ exports.getProducts = async (req, res, next) => {
 
 exports.getProduct = async (req, res, next) => {
   const productId = Number(req.params.productId);
-  const product = await Product.findById(productId);
-  res.render('shop/product-detail', { product, pageTitle: 'Product Details', path: '/products' });
+
+  try {
+    const [[product]] = await Product.findById(productId);
+    res.render('shop/product-detail', { product, pageTitle: 'Product Details', path: '/products' });
+  } catch(error) {
+    console.log(error);
+  }
 };
 
 exports.getCart = async (req, res, next) => {

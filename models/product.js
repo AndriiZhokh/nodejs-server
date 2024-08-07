@@ -12,6 +12,10 @@ module.exports = class Product {
 	}
 
 	async save() {
+		return await db.execute(
+			'INSERT INTO products (title, price, imageUrl, description) VALUES (?, ?, ?, ?)',
+			[this.title, this.price, this.imageUrl, this.description]
+		);
 	}
 
 	static async fetchAll() {
@@ -19,6 +23,7 @@ module.exports = class Product {
 	}
 
 	static async findById(id) {
+		return await db.execute('SELECT * FROM products WHERE products.id = ?', [id]);
 	}
 
 	static async deleteById(id) {

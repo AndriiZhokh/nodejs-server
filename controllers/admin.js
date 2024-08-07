@@ -11,8 +11,13 @@ exports.postAddProduct = async (req, res, next) => {
   const description = req.body.description;
 
   const product = new Product(null, title, imageUrl, description, price);
-  await product.save();
-  res.redirect('/');
+
+  try {
+    await product.save();
+    res.redirect('/');
+  } catch(error) {
+    console.log(error);
+  }
 };
 
 exports.getEditProduct = async (req, res, next) => {
