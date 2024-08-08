@@ -11,14 +11,15 @@ exports.postAddProduct = async (req, res, next) => {
   const description = req.body.description;
 
   try {
-    await Product.create({
+    await req.user.createProduct({
       title,
       price,
       imageUrl,
       description,
-    });
+    })
 
-    console.log('Product was created');
+    console.log('PRODUCT CREATED');
+    res.redirect('/admin/products');
   } catch(error) {
     console.log(error);
   }
@@ -34,7 +35,8 @@ exports.getEditProduct = async (req, res, next) => {
   const prodId = req.params.productId;
 
   try {
-    const product = await Product.findByPk(prodId);
+    const products = await req.user.getProducts({ where: { id: prodId } });
+    const product = products[0];
 
     if (!product) {
       return res.redirect('/');
@@ -70,14 +72,21 @@ exports.postEditProduct = async (req, res, next) => {
 };
 
 exports.getAdminProducts = async (req, res, next) => {
-  const prods = await Product.findAll();
+  const prods = await req.user.getProducts();
   res.render('admin/products', { pageTitle: 'Admin Products', path: '/admin/products', prods });
 };
 
 exports.postDeleteProduct = async (req, res, next) => {
   const productId = req.body.productId;
 
-  await Product.deleteById(productId);
-  res.redirect('/admin/products');
+  try {
+    const product = await Product.findByPk(productId);
+    console.log('DESTROYED PRODUCT');
+    await product.destroy();
+
+    res.redirect('/admin/products');
+  } catch(error) {
+    console.log(error);
+  }
 };
 
