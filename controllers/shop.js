@@ -1,5 +1,5 @@
 const Product = require('../models/product');
-const Cart = require('../models/cart');
+const Order = require('../models/order');
 
 exports.getShopPage = async (req, res, next) => {
   try {
@@ -85,11 +85,30 @@ exports.postCartDeleteProduct = async (req, res, next) => {
   }
 };
 
-exports.getOrders = (req, res, next) => {
-  res.render('shop/orders', { pageTitle: 'Orders', path: '/orders' });
+exports.postOrder = async (req, res, next) => {
+  try {
+    const cart = await req.user.getCart();
+    const products = await cart.getProducts();
+    const order = await req.user.createOrder();
+    await order.addProducts(products.map(product => {
+      product.orderItem = { quantity: product.cartItem.quantity };
+      return product;
+    }));
+    await cart.setProducts(null);
+
+    res.redirect('/orders');
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-exports.getCheckout = (req, res, next) => {
-  res.render('shop/checkout', { pageTitle: 'Checkout', path: '/checkout' });
+exports.getOrders = async (req, res, next) => {
+  try {
+    const orders = await req.user.getOrders({ include: ['products'] });
+
+    res.render('shop/orders', { pageTitle: 'Orders', path: '/orders', orders });
+  } catch (error) {
+    console.log(error)
+  }
 };
 

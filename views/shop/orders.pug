@@ -2,4 +2,13 @@ extends ../layouts/main-layout.pug
 
 block content
 	main
-		h1 Orders Page
+		if orders.length
+			ul
+				each order in orders
+					li
+						h2= '#' + order.id
+						ul
+							each product in order.products
+								li= product.title + ' (' + product.orderItem.quantity + ')'
+		else
+			h1 Orders Page
