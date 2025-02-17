@@ -4,12 +4,12 @@ const bodyParser = require('body-parser');
 
 const rootDir = require('./util/path');
 
-// const adminRoutes = require('./routes/admin');
+const adminRoutes = require('./routes/admin');
 // const shopRoutes = require('./routes/shop');
 
 const errorController = require('./controllers/error');
 
-const mongoConnect = require('./util/database');
+const { mongoConnect } = require('./util/database');
 
 const app = express();
 
@@ -26,15 +26,15 @@ app.use(async (req, res, next) => {
     // } catch(error) {
     //     console.log(error);
     // }
+  next();
 })
 
-// app.use('/admin', adminRoutes);
+app.use('/admin', adminRoutes);
 // app.use(shopRoutes);
 
 app.use(errorController.getPageNotFound);
 
 mongoConnect()
-  .then(client => {
-    console.log(client);
+  .then(() => {
     app.listen(3000);
   })
