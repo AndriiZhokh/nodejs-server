@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const rootDir = require('./util/path');
 
 const adminRoutes = require('./routes/admin');
-// const shopRoutes = require('./routes/shop');
+const shopRoutes = require('./routes/shop');
 
 const errorController = require('./controllers/error');
 
@@ -30,7 +30,7 @@ app.use(async (req, res, next) => {
 })
 
 app.use('/admin', adminRoutes);
-// app.use(shopRoutes);
+app.use(shopRoutes);
 
 app.use(errorController.getPageNotFound);
 
