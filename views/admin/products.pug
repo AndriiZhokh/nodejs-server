@@ -11,10 +11,10 @@ block content
 				each product in prods
 					li
 						span #{product.title}
-						a(href="/admin/edit-product/" + product.id + "?edit=true") Edit
+						a(href="/admin/edit-product/" + product._id + "?edit=true") Edit
 
 						form(action="/admin/delete-product", method="POST")
-							input(type="hidden", value=product.id, name="productId")
+							input(type="hidden", value=product._id, name="productId")
 							button.btn(type="submit") Delete
 		else
 			p No Products
