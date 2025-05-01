@@ -52,11 +52,12 @@ exports.postEditProduct = async (req, res, next) => {
   const updatedDescription = req.body.description;
 
   try {
-    const product = await Product.findByPk(prodId);
-    product.title = updatedTitle;
-    product.price = updatedPrice;
-    product.imageUrl = updatedImageUrl;
-    product.description = updatedDescription;
+    // const productData = await Product.findById(prodId);
+    const product = new Product(updatedTitle, updatedPrice, updatedDescription, updatedImageUrl, prodId);
+    // product.title = updatedTitle;
+    // product.price = updatedPrice;
+    // product.imageUrl = updatedImageUrl;
+    // product.description = updatedDescription;
 
     await product.save();
     console.log('UPDATED PRODUCT');
@@ -72,17 +73,16 @@ exports.getAdminProducts = async (req, res, next) => {
   res.render('admin/products', { pageTitle: 'Admin Products', path: '/admin/products', prods });
 };
 
-// exports.postDeleteProduct = async (req, res, next) => {
-//   const productId = req.body.productId;
-//
-//   try {
-//     const product = await Product.findByPk(productId);
-//     console.log('DESTROYED PRODUCT');
-//     await product.destroy();
-//
-//     res.redirect('/admin/products');
-//   } catch(error) {
-//     console.log(error);
-//   }
-// };
+exports.postDeleteProduct = async (req, res, next) => {
+  const productId = req.body.productId;
+
+  try {
+    await Product.deleteById(productId);
+    console.log('PRODUCT DELETED');
+
+    res.redirect('/admin/products');
+  } catch(error) {
+    console.log(error);
+  }
+};
 

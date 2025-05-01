@@ -7,7 +7,7 @@ class Product {
 		this.price = price;
 		this.description = description;
 		this.imageUrl = imageUrl;
-		this._id = id;
+		this._id = id ? new ObjectId(id) : null;
 	}
 
 	async save() {
@@ -15,7 +15,7 @@ class Product {
 
 		try {
 			if (this._id) {
-				return await db.collection('products').updateOne({ _id: new ObjectId(this._id) }, { $set: this });
+				return await db.collection('products').updateOne({ _id: this._id }, { $set: this });
 			} 
 
 			return await db.collection('products').insertOne(this);
@@ -45,6 +45,17 @@ class Product {
 			console.log(product);
 
 			return product;
+		} catch(error) {
+			console.log(error);
+		}
+	}
+
+	static async deleteById(prodId) {
+		const db = getDb();
+		try {
+			const result = await db.collection('products').deleteOne({ _id: new ObjectId(prodId) });
+			console.log('Deleted', result);
+			return result;
 		} catch(error) {
 			console.log(error);
 		}
