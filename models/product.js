@@ -7,23 +7,18 @@ class Product {
 		this.price = price;
 		this.description = description;
 		this.imageUrl = imageUrl;
-    this._id = id;
+		this._id = id;
 	}
 
 	async save() {
 		const db = getDb();
 
 		try {
-      if (this._id) {
-        const result = await db.collection('products').updateOne({ _id: new ObjectId(this._id) }, { $set: this });
-      } else {
-			  const result = await db.collection('products').insertOne(this);
-			  console.log(result);
+			if (this._id) {
+				return await db.collection('products').updateOne({ _id: new ObjectId(this._id) }, { $set: this });
+			} 
 
-			  return result;
-      }
-
-
+			return await db.collection('products').insertOne(this);
 		} catch(error) {
 			console.log(error);
 		}
