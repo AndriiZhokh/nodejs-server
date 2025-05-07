@@ -63,6 +63,64 @@ class User {
     }
   }
 
+  async deleteItemFromCart(productId) {
+    const updatedCartItems = this.cart.items.filter(item => item.productId.toString() !== productId.toString());
+    const db = getDb();
+
+    try {
+      return await db.collection('users').updateOne(
+        { _id: new ObjectId(this.id) },
+        { $set: { cart: { items: updatedCartItems } } },
+      );
+    } catch(error) {
+      console.log(error)
+    }
+
+  }
+
+  async addOrder() {
+    const db = getDb();
+    try {
+      const products = await this.getCart();
+
+      const order = {
+        items: products,
+        user: {
+          _id: new ObjectId(this.id),
+          name: this.name,
+        },
+      };
+
+      const result = await db.collection('orders').insertOne(order);
+
+      this.cart = { items: [] };
+
+      console.log('USER ID', this);
+
+      const test = await db.collection('users').updateOne(
+        { _id: new ObjectId(this.id) },
+        { $set: { cart: { items: [] } } },
+      );
+
+      return result;
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
+  async getOrders() {
+    const db = getDb();
+
+    try {
+      return await db
+        .collection('orders')
+        .find({ 'user._id': new ObjectId(this.id) })
+        .toArray();
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
   static async findById(userId) {
     const db = getDb();
     console.log({ userId });
