@@ -10,7 +10,7 @@ exports.postAddProduct = async (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
 
-  const product = new Product(title, price, description, imageUrl, null, req.user.id);
+  const product = new Product({ title, price, description, imageUrl });
 
   try {
     const result = await product.save();
